@@ -42,42 +42,42 @@ class codeWriter
 	public void writeArithmetic(string command) {
         switch (command) {
             case "add":
-                this.outputFile.writeln(asmCode.ADD());
+                this.outputFile.writeln("//add"~"\n"~asmCode.ADD());
                 break;
 
             case "sub":
-                this.outputFile.writeln(asmCode.SUB());
+                this.outputFile.writeln("//sub"~"\n"~asmCode.SUB());
                 break;
 
             case "neg":
-                this.outputFile.writeln(asmCode.NEG());
+                this.outputFile.writeln("//neg"~"\n"~asmCode.NEG());
                 break;
 
             case "eq":
-                this.outputFile.writeln(asmCode.EQ(this.arthJumpFlag));
+                this.outputFile.writeln("//eq"~"\n"~asmCode.EQ(this.arthJumpFlag));
                 this.arthJumpFlag++;
                 break;
 
             case "gt":
-                this.outputFile.writeln(asmCode.GT(this.arthJumpFlag));
+                this.outputFile.writeln("//gt"~"\n"~asmCode.GT(this.arthJumpFlag));
                 this.arthJumpFlag++;
                 break;
 
             case "lt":
-                this.outputFile.writeln(asmCode.LT(this.arthJumpFlag));
+                this.outputFile.writeln("//lt"~"\n"~asmCode.LT(this.arthJumpFlag));
                 this.arthJumpFlag++;
                 break;
 
             case "and":
-                this.outputFile.writeln(asmCode.AND());
+                this.outputFile.writeln("//and"~"\n"~asmCode.AND());
                 break;
 
             case "or":
-                this.outputFile.writeln(asmCode.OR());
+                this.outputFile.writeln("//or"~"\n"~asmCode.OR());
                 break;
 
             case "not":
-                this.outputFile.writeln(asmCode.NOT());
+                this.outputFile.writeln("//not"~"\n"~asmCode.NOT());
                 break;
 
             default:
@@ -94,19 +94,19 @@ class codeWriter
 
                 switch (segment){
                     case "constant":
-                        this.outputFile.writeln(asmCode.PUSH_CONSTANT(index));
+                        this.outputFile.writeln("//"~segment~"\n"~asmCode.PUSH_CONSTANT(index));
                         break;
                     case "local","argument","this","that":
-                        this.outputFile.writeln(asmCode.PUSH_LCL_ARG_THIS_THAT(segmentConversionforHACK(segment),index));
+                        this.outputFile.writeln("//"~segment~"\n"~asmCode.PUSH_LCL_ARG_THIS_THAT(segmentConversionforHACK(segment),index));
                         break;
                     case "temp":
-                        this.outputFile.writeln(asmCode.PUSH_TEMP(index));
+                        this.outputFile.writeln("//"~segment~"\n"~asmCode.PUSH_TEMP(index));
                         break;
 					case "static":
-                        this.outputFile.writeln(asmCode.PUSH_STATIC(index));
+                        this.outputFile.writeln("//"~segment~"\n"~asmCode.PUSH_STATIC(index));
                         break;
 					case "pointer":
-                        this.outputFile.writeln(asmCode.PUSH_POINTER(index));
+                        this.outputFile.writeln("//"~segment~"\n"~asmCode.PUSH_POINTER(index));
                         break;
                     default:
                         throw new Exception("Unknown segment: " ~ segment);
@@ -116,16 +116,16 @@ class codeWriter
             case CommandType.C_POP:
 				switch (segment){
                     case "local","argument","this","that":
-                        this.outputFile.writeln(asmCode.POP_LCL_ARG_THIS_THAT(segmentConversionforHACK(segment),index));
+                        this.outputFile.writeln("//"~segment~"\n"~asmCode.POP_LCL_ARG_THIS_THAT(segmentConversionforHACK(segment),index));
                         break;
                     case "temp":
-                        this.outputFile.writeln(asmCode.POP_TEMP(index));
+                        this.outputFile.writeln("//"~segment~"\n"~asmCode.POP_TEMP(index));
                         break;
                     case "static":
-                        this.outputFile.writeln(asmCode.POP_STATIC(index));
+                        this.outputFile.writeln("//"~segment~"\n"~asmCode.POP_STATIC(index));
                         break;
 					case "pointer":
-                        this.outputFile.writeln(asmCode.POP_POINTER(index));
+                        this.outputFile.writeln("//"~segment~"\n"~asmCode.POP_POINTER(index));
                         break;
                     default:
                         throw new Exception("Unknown segment: " ~ segment);

@@ -154,6 +154,8 @@ M=M+1             //   ram[0] = ram[0]+1
 
 					  
 
+//LT
+
 @SP               //   A = 0                          
 AM=M-1            //   A = ram[0]-1, ram[0] = ram[0]-1
 D=M               //   D = ram[A]                     
@@ -196,6 +198,8 @@ M=D               //   ram[A] = D
 M=M+1             //   ram[0] = ram[0]+1  
 
 					  
+
+//LT
 
 @SP               //   A = 0                          
 AM=M-1            //   A = ram[0]-1, ram[0] = ram[0]-1
@@ -240,6 +244,8 @@ M=M+1             //   ram[0] = ram[0]+1
 
 					  
 
+//LT
+
 @SP               //   A = 0                          
 AM=M-1            //   A = ram[0]-1, ram[0] = ram[0]-1
 D=M               //   D = ram[A]                     
@@ -282,6 +288,8 @@ M=D               //   ram[A] = D
 M=M+1             //   ram[0] = ram[0]+1  
 
 					  
+
+//GT
 
 @SP               //   A = 0                            
 AM=M-1            //   A = ram[0]-1, ram[0] = ram[0]-1  
@@ -326,6 +334,8 @@ M=M+1             //   ram[0] = ram[0]+1
 
 					  
 
+//GT
+
 @SP               //   A = 0                            
 AM=M-1            //   A = ram[0]-1, ram[0] = ram[0]-1  
 D=M               //   D = ram[A]                       
@@ -368,6 +378,8 @@ M=D               //   ram[A] = D
 M=M+1             //   ram[0] = ram[0]+1  
 
 					  
+
+//GT
 
 @SP               //   A = 0                            
 AM=M-1            //   A = ram[0]-1, ram[0] = ram[0]-1  
@@ -422,6 +434,8 @@ M=M+1             //   ram[0] = ram[0]+1
 
 					  
 
+// ADD
+
 @SP               //   A = 0
 AM=M-1            //   A = ram[0]-1, ram[0] = ram[0]-1
 D=M               //   D = ram[A]
@@ -444,6 +458,8 @@ M=M+1             //   ram[0] = ram[0]+1
 
 					  
 
+// SUB
+
 @SP               //   A = 0
 AM=M-1            //   A = ram[0]-1, ram[0] = ram[0]-1
 D=M               //   D = ram[A]
@@ -456,6 +472,8 @@ M=M+1             //   ram[0] = ram[0]+1
 
 			
 
+//NEG
+
 @SP               //   A = 0
 AM=M-1            //   A = ram[0]-1, ram[0] = ram[0]-1
 M=-M               //  ram[A] = -ram[A]
@@ -463,6 +481,8 @@ M=-M               //  ram[A] = -ram[A]
 M=M+1             //   ram[0] = ram[0]+1
 
 			
+
+//AND
 
 @SP               //   A = 0                            
 AM=M-1            //   A = ram[0]-1, ram[0] = ram[0]-1  
@@ -485,6 +505,8 @@ M=M+1             //   ram[0] = ram[0]+1
 
 					  
 
+//OR
+
 @SP               //   A = 0                           
 AM=M-1            //   A = ram[0]-1, ram[0] = ram[0]-1 
 D=M               //   D = ram[A]                      
@@ -496,6 +518,8 @@ M=D               //   ram[A] = D
 M=M+1             //   ram[0] = ram[0]+1  
 
 			
+
+//NOT
 
 @SP               //   A = 0                          
 AM=M-1            //   A = ram[0]-1, ram[0] = ram[0]-1
