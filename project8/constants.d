@@ -427,7 +427,7 @@ M=M+1           // Increment the stack pointer
 		asm_code ~= "@THAT\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n";
 
 		// Reposition ARG
-		asm_code ~= "@SP\nD=M\n@%d\nD=D-A\n@ARG\nM=D\n".format(5 + num_of_arg);
+		asm_code ~= "@SP\nD=M\n@%d\nD=D-A\n@ARG\nM=D\n".format(5+num_of_arg);
 
 		// Reposition LCL
 		asm_code ~= "@SP\nD=M\n@LCL\nM=D\n";
@@ -497,6 +497,22 @@ D = D-1 ;JNE
 		asm_code ~= "@13\nA=M\n0;JMP\n";
 
 		return asm_code;
+	}
+
+
+	static string BOOTSTRAP()
+	{
+		return format("
+@256
+D=A
+@SP
+M=D
+
+%s
+		  
+" 
+			,	CALL("Sys.init",0 , 0));
+	
 	}
 
 

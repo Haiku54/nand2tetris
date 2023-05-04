@@ -20,7 +20,7 @@ class codeWriter
     private this(string outputFilePath) {
         this.outputFile = new File(outputFilePath~"\\"~baseName(outputFilePath)~".asm", "w");
         arthJumpFlag = 0;
-        callFuncFlag = 0;
+        callFuncFlag = 1;
     }
 
 
@@ -144,11 +144,11 @@ class codeWriter
 
 
 	public void writeLabel(string file_name,string label_name) {
-		this.outputFile.writeln("//label "~label_name~"\n"~asmCode.LABEL(file_name, label_name));
+		this.outputFile.writeln("// label "~label_name~"\n"~asmCode.LABEL(file_name, label_name));
     }
 
 	public void writeGoto(string file_name,string label_name) {
-		this.outputFile.writeln("//Go to "~label_name~"\n"~asmCode.GOTO(file_name, label_name));
+		this.outputFile.writeln("// Go to "~label_name~"\n"~asmCode.GOTO(file_name, label_name));
     }
 
 	public void writeIf(string file_name,string label_name) {
@@ -165,6 +165,10 @@ class codeWriter
     }
 	public void writeReturn() {
 		this.outputFile.writeln("//Return\n"~asmCode.RETURN());
+    }
+
+	public void writeBootStrap() {
+		this.outputFile.writeln("//Boot Strap\n"~asmCode.BOOTSTRAP());
     }
 
     public void close()

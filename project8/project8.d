@@ -11,7 +11,8 @@ import std.conv;
 import std.stdio;
 import std.file;
 import std.path;
-import std.algorithm;
+import std.array;
+
 
 
 
@@ -31,9 +32,13 @@ void main(string[] args)
 	 string folderPath = args[1];
 	
 
-	auto dFiles = dirEntries(folderPath, SpanMode.depth).filter!(f => f.name.endsWith(".vm"));
+	auto dFiles = dirEntries(folderPath, SpanMode.depth).filter!(f => f.name.endsWith(".vm")).array;
 	writer = codeWriter.codeWriter.getInstance(folderPath);
 
+	if(dFiles.length > 1)
+	{
+		writer.writeBootStrap(); // Sys.init
+	}
 
 	foreach (file; dFiles) {
 		 parser = VmParser.getInstance(file.name);
