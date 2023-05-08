@@ -282,21 +282,21 @@ M=D               //   ram[A] = D (store the value in the specified segment and 
 
 /// gruop 3
 
-	static string POP_STATIC (int index) {
+	static string POP_STATIC (string file_name,int index) {
 		return format("
 @SP                 //   A = 0 (Address of Stack Pointer)
 AM=M-1              //   A = ram[0]-1 (A = stack pointer - 1), M = M-1 (Decrement stack pointer)
 D=M                 //   D = ram[A] (D = value at the top of the stack)
-@%s                 //   A = address of the static variable static.{index}
+@%s.%s                 //   A = address of the static variable static.{index}
 M=D                 //   ram[A] = D (Store the value from the top of the stack in the static variable)
 "
-					  , index);
+					 , file_name, index);
 	}
 
 
-	static string PUSH_STATIC (int index) {
+	static string PUSH_STATIC (string file_name,int index) {
 		return format("
-@%s                //   A = address of the static variable static.{index}
+@%s.%s                //   A = address of the static variable static.{index}
 D=M                 //   D = ram[A] (D = value of the static variable)
 @SP                 //   A = 0 (Address of Stack Pointer)
 A=M                 //   A = ram[0] (A = stack pointer)
@@ -304,11 +304,11 @@ M=D                 //   ram[A] = D (Store the value of the static variable at t
 @SP                 //   A = 0 (Address of Stack Pointer)
 M=M+1               //   M = M+1 (Increment stack pointer)
  "
-					  , index);
+					  ,file_name, index);
 	}
 
 
-	///gruop 4
+	//gruop 4
 
 	static string PUSH_POINTER(int index) {
 		string segment = index == 0 ? "THIS" : "THAT";
@@ -366,8 +366,8 @@ M=M+1             //   ram[0] = ram[0]+1
 	static string LABEL(string file_name, string label_name)
 	{
 		return format("
-(%s.%s)				// label %s
-					  ",file_name,label_name,label_name);
+(%s.%s)				// 
+					  ",file_name,label_name);
 	}
 
 
@@ -417,28 +417,85 @@ M=M+1           // Increment the stack pointer
 		string asm_code;
 
 		// Push the return address (a unique label based on the index)
-		string return_address = "%s.RETURN_ADDRESS".format(function_name) ~ to!string(index);
-		asm_code ~= "@%s\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1\n".format(return_address);
+		string return_address = "%s.RETURN_ADDRESS%s".format(function_name,index);
 
-		// Push LCL, ARG, THIS, and THAT
-		asm_code ~= "@LCL\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n";
-		asm_code ~= "@ARG\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n";
-		asm_code ~= "@THIS\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n";
-		asm_code ~= "@THAT\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n";
+		return format("
+					  // ++++++++++++++ CALL ++++++++++++++  
+                
+// *** push return-address *** 
+@%s
+D=A               //           
+@SP               //   A = 0              
+A=M               //   A = ram[0]         
+M=D               //   ram[ram[0]] =         
+@SP               //   A = 0              
+M=M+1             //   ram[0] = ram[0]+1  
 
-		// Reposition ARG
-		asm_code ~= "@SP\nD=M\n@%d\nD=D-A\n@ARG\nM=D\n".format(5+num_of_arg);
+// *** push LCL ***	
+@LCL              //   A = LCL     
+D=M               //   D = ram[LCL] 
+@SP               //   A = 0                                     
+A=M               //   A = ram[0]                                
+M=D               //   ram[ram[0]] = D                                
+@SP               //   A = 0                                     
+M=M+1             //   ram[0] = ram[0]+1                         
 
-		// Reposition LCL
-		asm_code ~= "@SP\nD=M\n@LCL\nM=D\n";
+// *** push ARG *** 	
+@ARG              //   A = ARG      
+D=M               //   D = ram[ARG]           
+@SP               //   A = 0             
+A=M               //   A = ram[0]        
+M=D               //   ram[ram[0]] = D        
+@SP               //   A = 0             
+M=M+1             //   ram[0] = ram[0]+1 
 
-		// Jump to the function
-		asm_code ~= "@%s\n0;JMP\n".format(function_name);
+// *** push THIS *** 	
+@THIS             //   A = THIS     
+D=M               //   D = ram[THIS]           
+@SP               //   A = 0             
+A=M               //   A = ram[0]        
+M=D               //   ram[ram[0]] = D        
+@SP               //   A = 0             
+M=M+1             //   ram[0] = ram[0]+1 
 
-		// Declare the return address label
-		asm_code ~= "(%s)\n".format(return_address);
+// *** push THAT ***   	
+@THAT             //   A = THAT
+D=M               //   D = ram[THAT]           
+@SP               //   A = 0             
+A=M               //   A = ram[0]        
+M=D               //   ram[ram[0]] = D        
+@SP               //   A = 0             
+M=M+1             //   ram[0] = ram[0]+1 
 
-		return asm_code;
+// *** ARG = SP-n-5 ***	
+@SP               //   A = 0     
+D=M               //   D = ram[0]
+@%s
+D=D-A             //   D = D-{numARG}
+@5                //   A = 5
+D=D-A             //   D = D-5
+@ARG              //   A = ARG
+M=D               //   ram[ARG] = D
+
+// *** LCL = SP ***
+@SP              //   A = 0     
+D=M              //   D = ram[0]
+@LCL             //   A = LCL     
+M=D              //   ram[LCL] = ram[SP]
+
+// *** goto g *** 	
+@%s  
+0;JMP            //   jump to {nameOfFunction}
+
+// *** label return-address *** 
+(%s)  
+
+// ++++++++++++++ END CALL ++++++++++++++  
+
+"
+					  ,return_address,num_of_arg,function_name,return_address);
+
+
 	}
 
 
@@ -467,52 +524,163 @@ D = D-1 ;JNE
 
 
 	static string RETURN() {
-		string asm_code;
+return "
+// ++++++++++++++ RETURN ++++++++++++++
 
-		// FRAME = LCL
-		asm_code ~= "@LCL\nD=M\n";
+// *** FRAME = LCL ***
+@LCL             //   A = LCL      
+D=M              //   D = ram[LCL] 
 
-		// RET = *(FRAME - 5)
-		asm_code ~= "@5\nA=D-A\nD=M\n@13\nM=D\n";
+// *** RET = *(FRAME-5) ***
+// *** RAM[13] = (LOCAL-5) *** 
+@5               //   A = 5             
+A=D-A            //   A = D-5        
+D=M              //   D = ram[D-5]        
+@13              //   A = 13             
+M=D              //   ram[13] = D 
 
-		// *ARG = pop()
-		asm_code ~= "@SP\nM=M-1\nA=M\nD=M\n@ARG\nA=M\nM=D\n";
+// ***[ *ARG = pop() ]***
+@SP  	           //   A = 0
+M=M-1            //   ram[0] = ram[0]-1           
+A=M              //   A = ram[0]              
+D=M              //   D = ram[ram[0]]         
+@ARG             //   A = ARG         
+A=M              //   A = ram[ARG]              
+M=D              //   ram[ram[ARG]] = ram[ram[0]]  
 
-		// SP = ARG + 1
-		asm_code ~= "@ARG\nD=M\n@SP\nM=D+1\n";
+// *** SP = ARG+1 ***
+@ARG             //   A = ARG 
+D=M              //   D = ram[ARG]  
+@SP              //   A = 0     
+M=D+1	           //   ram[SP] = ram[ARG]+1
 
-		// THAT = *(FRAME - 1)
-		asm_code ~= "@LCL\nM=M-1\nA=M\nD=M\n@THAT\nM=D\n";
+// *** THAT = *(FRAME-1) ***
+@LCL             //   A = LCL       
+M=M-1            //   ram[LCL] = ram[LCL]-1  
+A=M              //   A = ram[LCL]         
+D=M              //   D = ram[ram[LCL]]  
+@THAT            //   A = THAT
+M=D              //   A[THAT] = ram[ram[LCL]]
 
-		// THIS = *(FRAME - 2)
-		asm_code ~= "@LCL\nM=M-1\nA=M\nD=M\n@THIS\nM=D\n";
+// *** THIS = *(FRAME-2) ***
+@LCL             //   A = LCL              
+M=M-1            //   ram[LCL] = ram[LCL]-1
+A=M              //   A = ram[LCL]         
+D=M              //   D = ram[ram[LCL]]           
+@THIS            //   A = THIS             
+M=D              //   A[THIS] = ram[ram[LCL]]          
 
-		// ARG = *(FRAME - 3)
-		asm_code ~= "@LCL\nM=M-1\nA=M\nD=M\n@ARG\nM=D\n";
+// *** ARG = *(FRAME-3) ***
+@LCL             //   A = LCL              
+M=M-1            //   ram[LCL] = ram[LCL]-1
+A=M              //   A = ram[LCL]         
+D=M              //   D = ram[ram[LCL]]           
+@ARG             //   A = ARG             
+M=D			   //   A[ARG] = ram[ram[LCL]]          	
 
-		// LCL = *(FRAME - 4)
-		asm_code ~= "@LCL\nM=M-1\nA=M\nD=M\n@LCL\nM=D\n";
+// *** LCL = *(FRAME-4) ***
+@LCL             //   A = LCL              
+M=M-1            //   ram[LCL] = ram[LCL]-1
+A=M              //   A = ram[LCL]         
+D=M              //   D = ram[ram[LCL]]           
+@LCL             //   A = LCL              
+M=D		       //   A[LCL] = ram[ram[LCL]]          
 
-		// Goto RET
-		asm_code ~= "@13\nA=M\n0;JMP\n";
+// *** goto RET ***
+@13              //   A = 13              
+A=M              //   A = ram[13]
+0; JMP           //   jump to ram[ram[13]] 
 
-		return asm_code;
+// ++++++++++++++ END RETURN ++++++++++++++
+
+";
 	}
 
 
 	static string BOOTSTRAP()
 	{
-		return format("
+		return "
+// ++++++++++++++ BOOTSTRAPPING ++++++++++++++
+
+// *** SP = 256 ***
+
 @256
 D=A
 @SP
 M=D
 
-%s
-		  
-" 
-			,	CALL("Sys.init",0 , 0));
-	
+// *** call Sys.init ***
+
+// push return-address
+@Sys.init.RETURN_ADDRESS0
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+
+// push LCL
+@LCL  
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+
+// push ARG
+@ARG  
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+
+// push THIS
+@THIS
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+
+// push THAT
+@THAT
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+
+// ARG = SP-n-5 
+@SP
+D=M
+@0
+D=D-A
+@5
+D=D-A
+@ARG
+M=D
+
+// LCL = SP 
+@SP
+D=M
+@LCL
+M=D
+
+@Sys.init
+0;JMP
+
+(Sys.init.RETURN_ADDRESS0)
+
+// ++++++++++++++ END BOOTSTRAPPING ++++++++++++++
+
+					  ";
+
 	}
 
 

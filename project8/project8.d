@@ -52,10 +52,10 @@ void main(string[] args)
 					writer.writeArithmetic(parser.arg1());
 					break;
 				case CommandType.C_PUSH:
-					writer.WritePushPop(CommandType.C_PUSH,parser.arg1(),parser.arg2() );
+					writer.WritePushPop(CommandType.C_PUSH,parser.arg1(),parser.arg2() ,stripExtension(baseName(file.name)));
 					break;
 				case CommandType.C_POP:
-					writer.WritePushPop(CommandType.C_POP,parser.arg1(),parser.arg2() );
+					writer.WritePushPop(CommandType.C_POP,parser.arg1(),parser.arg2(),stripExtension(baseName(file.name)) );
 					break;
 				case CommandType.C_LABEL:
 					writer.writeLabel(stripExtension(baseName(file.name)),parser.arg1() );
@@ -73,9 +73,10 @@ void main(string[] args)
 					writer.writeFunction(parser.arg1(),parser.arg2());
 					break;
 				case CommandType.C_RETURN:
-					writer.writeReturn( );
+					writer.writeReturn();
 					break;
 				default:
+					writeln("main");
 					break;
 			}
 

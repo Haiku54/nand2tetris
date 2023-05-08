@@ -19,7 +19,7 @@ class codeWriter
     // Private constructor
     private this(string outputFilePath) {
         this.outputFile = new File(outputFilePath~"\\"~baseName(outputFilePath)~".asm", "w");
-        arthJumpFlag = 0;
+        arthJumpFlag = 1;
         callFuncFlag = 1;
     }
 
@@ -37,7 +37,7 @@ class codeWriter
     public void setFileName(string outputFilePath)
 	{
          this.outputFile = new File(stripExtension(outputFilePath)~".asm", "w");
-        arthJumpFlag = 0;
+        //arthJumpFlag = 0;
 	}
 
 
@@ -89,7 +89,7 @@ class codeWriter
     }
 
 
-    public void WritePushPop(CommandType command, string segment, int index)
+    public void WritePushPop(CommandType command, string segment, int index,string file_name)
 	{
         switch (command)
 		{
@@ -106,7 +106,7 @@ class codeWriter
                         this.outputFile.writeln("//"~segment~"\n"~asmCode.PUSH_TEMP(index));
                         break;
 					case "static":
-                        this.outputFile.writeln("//"~segment~"\n"~asmCode.PUSH_STATIC(index));
+                        this.outputFile.writeln("//"~segment~"\n"~asmCode.PUSH_STATIC(file_name,index));
                         break;
 					case "pointer":
                         this.outputFile.writeln("//"~segment~"\n"~asmCode.PUSH_POINTER(index));
@@ -125,7 +125,7 @@ class codeWriter
                         this.outputFile.writeln("//"~segment~"\n"~asmCode.POP_TEMP(index));
                         break;
                     case "static":
-                        this.outputFile.writeln("//"~segment~"\n"~asmCode.POP_STATIC(index));
+                        this.outputFile.writeln("//"~segment~"\n"~asmCode.POP_STATIC(file_name,index));
                         break;
 					case "pointer":
                         this.outputFile.writeln("//"~segment~"\n"~asmCode.POP_POINTER(index));
@@ -156,11 +156,11 @@ class codeWriter
     }
 
 	public void writeFunction(string func_name,int n_arg) {
-		this.outputFile.writeln("//function \n"~asmCode.FUNCTION(func_name, n_arg));
+		this.outputFile.writeln("//function\n"~asmCode.FUNCTION(func_name, n_arg));
     }
  
 	public void writeCall(string func_name,int n_arg) {
-		this.outputFile.writeln("//Function Call \n"~asmCode.CALL(func_name, n_arg, this.callFuncFlag));
+		this.outputFile.writeln("//Function Call\n"~asmCode.CALL(func_name, n_arg, this.callFuncFlag));
         this.callFuncFlag++;
     }
 	public void writeReturn() {
