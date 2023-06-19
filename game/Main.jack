@@ -1,0 +1,42 @@
+class Main{
+    /** Initializes a new game and starts it. */    
+    function void main() {
+        var triviaGame game;
+		var int key;
+		var int i;
+		let i =1;
+		
+		
+		let game = triviaGame.new();
+		do game.run(i);
+		do game.dispose();
+		let i = i +1;
+		
+
+		do Output.moveCursor(1,1);
+		do Output.printString("would you like to continue to the next Level ?: ");
+		let key = Keyboard.readInt("1/0   ");
+		
+		if(key=1)
+		{
+		
+				do Output.moveCursor(4,2);
+		do Output.printString("level ");
+		do Output.printInt(i);
+		do Sys.wait(1500);
+		 let game = triviaGame.new();
+         do game.run(i);
+		 do game.dispose();
+		 do game.gameOver();
+		 
+	       let i = i +1;
+		   return;
+		}
+
+		
+		
+		
+		do game.gameOver();
+        return;
+	}
+}

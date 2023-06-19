@@ -1,0 +1,78 @@
+class qestion{
+	field String qest;
+	field String awns1;
+	field String awns2;
+	field String awns3;
+	field String awns4;
+	field int aCorrect;
+method int getCorrect()
+{
+	return aCorrect;
+	
+}
+
+method void dispose() {
+  do Memory.deAlloc(this);
+    return;
+  }
+  
+
+
+constructor qestion new(String Qest,String Awns1,String Awns2,String Awns3,String Awns4,int Correct){
+	let qest=Qest;
+	let awns1= Awns1;
+	let awns2= Awns2;
+	let awns3= Awns3;
+	let awns4= Awns4;
+	let aCorrect = Correct;
+	return this;
+}
+
+
+method void print(){
+do Output.moveCursor(2,2);
+do Output.printString(qest);
+do Output.println();
+
+do Output.moveCursor(4,2);
+do Output.printString(" [");
+do Output.printInt(1);
+do Output.printString("] ");
+do Output.printString(awns1);
+do Output.println();
+
+do Output.moveCursor(6,2);
+do Output.printString(" [");
+do Output.printInt(2);
+do Output.printString("] ");
+do Output.printString(awns2);
+do Output.println();
+
+do Output.moveCursor(8,2);
+do Output.printString(" [");
+do Output.printInt(3);
+do Output.printString("] ");
+do Output.printString(awns3);
+do Output.println();
+
+do Output.moveCursor(10,2);
+do Output.printString(" [");
+do Output.printInt(4);
+do Output.printString("] ");
+do Output.printString(awns4);
+do Output.println();
+
+return;
+}
+
+
+
+
+// method void run() {
+ //  do print();
+//	return;
+//}
+
+
+}
+

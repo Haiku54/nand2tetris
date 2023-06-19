@@ -1,0 +1,273 @@
+class triviaGame{
+   field Array questCollec;
+    field int score;
+    constructor triviaGame new(){
+	let questCollec =  Array.new(30);
+		
+return this;	
+}
+
+ method void dispose() {
+ 
+ var  qestion  q; 
+ var int disposeIndex;
+	do questCollec.dispose();
+			let disposeIndex =0;
+		while(disposeIndex < 5)
+		{
+		let q = questCollec[disposeIndex];
+		do q.dispose();
+		let disposeIndex = disposeIndex+1;
+		}
+    do Memory.deAlloc(this);
+    return;
+}
+
+method int getScore(){
+return score;
+}
+
+method void init1(){
+
+
+
+let questCollec[0]=qestion.new("The best teacher at JCT is:","Efrat Amar","Yair Goldstein","Norit Greenberg","Meir Komar",2);
+let questCollec[1]=qestion.new("What grade will we get from Yair in this course?","100","99","98","98.5",1);
+let questCollec[2]=qestion.new("What does the 'V' in 'MVC' architectural pattern stand for?","Variant","View","Vertex","Value",2);
+let questCollec[3]=qestion.new("Which programming language was named after a comedy group?","Ruby","C++","Java","Python",4);
+let questCollec[4]=qestion.new("11101 in binary is ?","31","33","29","27",3);
+
+do drawBoard();
+do Output.moveCursor(15,46);
+do Output.printString("Level ");
+do Output.moveCursor(15,53);
+do Output.printInt(1);
+	return;
+	 
+ }
+ 
+ method void init2(){
+
+let questCollec[0]=qestion.new("What is the time complexity of binary search?","O(n)","O(n^2)","O(log n)","O(n log n)",3);
+let questCollec[1]=qestion.new(" Which Linux command is used to display the content of a file?","tiger","lion","dog","cat",4);
+let questCollec[2]=qestion.new("What is the maximum of memory that can be in a 32-bit system?","4 Gigabytes","2 Gigabytes","8 Gigabytes","512 Megabytes",1);
+let questCollec[3]=qestion.new("Who is known as the father of Computer Science?","John Von Neumann","Bill Gates","Charles Babbage","Alan Turing",4);
+let questCollec[4]=qestion.new("What is a form of permanent storage on your computer?","Cache","Hard Drive","ROM","RAM",2);
+
+do drawBoard();
+do Output.moveCursor(15,46);
+do Output.printString("Level ");
+do Output.moveCursor(15,53);
+do Output.printInt(2);
+	return;
+	 
+ }
+ 
+ method void init3(){
+ 
+let questCollec[0]=qestion.new("In Python programming, how do you start a comment?","","","","",4);
+let questCollec[1]=qestion.new("What does the 'V' in 'MVC' architectural pattern stand for?","Variant","View","Vertex","Value",2);
+let questCollec[2]=qestion.new("What was the first computer virus to spread widely across the internet?","ILOVEYOU","Melissa","Creeper","Mydoom",3);
+let questCollec[3]=qestion.new("Which computer programming language was named after a comedy group?","Ruby","C++","Java","Python",4);
+let questCollec[4]=qestion.new("How much did you enjoy the game?","1 - low","2","3","4 - high",4);
+
+do drawBoard();
+do Output.moveCursor(15,46);
+do Output.printString("Level ");
+do Output.moveCursor(15,53);
+do Output.printInt(3);
+	return; 
+ }
+method void gameOver()
+{
+var int i;
+do Screen.clearScreen();
+
+			let i = 4;
+			do Sys.wait(1000);
+			while(i>0){
+			    do Output.moveCursor(10,10);
+				do Output.printString("It was fun!");
+				do Sys.wait(2000);
+				do Output.moveCursor(10,10);
+				do Screen.clearScreen();
+				do Sys.wait(2000);
+				let i = i-1;
+				}
+				return;
+			}
+
+ method void run(int n) {
+	
+	var int scoreGame;
+	var int showPlayerAnswer;
+	var int TmpAnswer;
+	var int answer;
+	var  qestion  qestInCollec; 
+	var int i;
+	let i = 0;
+	
+	if(n=1){
+	do init1();  // initilaze the dataBase questions
+    }
+		if(n=2){
+	do init2();  // initilaze the dataBase questions
+    }
+		if(n=3){
+	do init3();  // initilaze the dataBase questions
+    }
+
+	        while (i<5) {
+			
+				do Output.moveCursor(17,46);
+				do Output.printString("your score: ");
+				do Output.moveCursor(17,58);
+				do Output.printInt(scoreGame);
+			
+			
+            let qestInCollec = questCollec[i];
+			
+			
+			do loadingNext();
+			do qestInCollec.print();
+			do Output.moveCursor(12,2);
+			do Output.printString("Enter The Answer [1 - 4] : ");
+			do presentCount(i);
+			let i=i+1;
+			do barProgress(i,5);
+			
+			do Output.moveCursor(12,25);
+			do Output.printString("]");
+			do Output.moveCursor(12,28);
+			let answer = Keyboard.readInt("");
+			
+			let TmpAnswer =  qestInCollec.getCorrect();
+			
+			if(TmpAnswer=answer)
+			{
+				let scoreGame = scoreGame + 20;
+			    do Output.moveCursor(17,58);
+				do Output.printInt(scoreGame);
+				let showPlayerAnswer = 1;
+				while(showPlayerAnswer>0){	
+			    	do Output.moveCursor(15,30);
+					do Output.printString("correct !!");
+					do Sys.wait(500*7);
+					do Output.moveCursor(15,30);
+					let showPlayerAnswer = showPlayerAnswer-1;
+				}
+				do Output.printString("            ");
+			}
+			else{
+			let showPlayerAnswer = 1;
+			while(showPlayerAnswer>0){
+			    do Output.moveCursor(15,30);
+				do Output.printString("wrong :-");
+				do Sys.wait(500*7);
+				do Output.moveCursor(15,30);
+				let showPlayerAnswer = showPlayerAnswer-1;
+				}
+				do Output.printString("          ");
+			}		
+			do clearTopScreen();
+			do qestInCollec.dispose();
+        }
+
+	return;
+}
+
+ method void presentCount(int n){
+ var int i;
+ let i = ((n+1)*20)+1;
+ let n = i+2-20;
+ while(n<i){
+ 		do Output.moveCursor(18,33);
+		do Output.printInt(n); 
+		do Output.printString(" %");
+ let n = n +1;
+ }
+ return;
+ }
+ 
+ 
+
+method void loadingNext(){
+var int i;
+
+ var char key;
+    
+ let i = 4;
+ do Output.moveCursor(16,3);
+ do Output.printString("loading in ");
+ do Output.moveCursor(16,14);
+ do Output.printInt(i);
+ do Output.printString(" second");
+ do Sys.wait(1000);
+ do Output.moveCursor(16,15);
+ let i=i-1;
+ do Output.printString(" ");
+ 	        while (i>0) {
+           do Output.moveCursor(16,14);
+			do Output.printInt(i);
+			do Sys.wait(1000);
+			let i=i-1;			 
+        }
+		do Output.moveCursor(16,3); 
+		do Output.printString("Good Luck  :        ");
+		do Sys.wait(1000);
+		
+ return;
+ }
+
+
+ 
+ method void barProgress(int questI,int questionsNum)
+{
+		var int end;
+		var int start;
+		var int interval;
+		var int end;
+		var int i;
+		let i =1;
+		let end = (510/questionsNum)*questI;
+		let interval = 510/questionsNum;
+		let start = end - interval;
+		while(start<(end+1)){
+		do Screen.drawLine(start,220,start,250);
+		let start = start+2;
+		}
+
+return;
+}
+ 
+ 
+
+ method void drawBoard(){
+    do Screen.clearScreen();
+	do Screen.drawLine(350,155,510,155);
+	do Screen.drawLine(350,157,510,157);
+	do Screen.drawLine(350,157,350,214);
+	do Screen.drawLine(352,157,352,214);
+	do Screen.drawLine(1,155,350,155);
+	do Screen.drawLine(1,157,350,157);
+	do Screen.drawLine(1,214,510,214);
+	do Screen.drawLine(1,216,510,216);
+	do Screen.drawLine(200,157,200,214);
+	do Screen.drawLine(202,157,202,214);
+	return;
+}
+
+method void clearTopScreen(){
+	var int i;
+	let i = 7;
+	do Output.moveCursor(0,0);
+	while (i>0){
+			do Output.printString("                                                                    ");
+			do Output.println();
+			let i = i-1;
+}
+			do Output.moveCursor(0,0);
+ return;
+ }
+}
+
