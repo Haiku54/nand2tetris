@@ -205,7 +205,11 @@ class programStructure{
 					~""~subRoutinOutput;
 				break;
 				case "function":
-					ft.define("this",ft.getClassName(),"arg"); // new--
+					//ft.define("this",ft.getClassName(),"arg"); // new--
+					if(st.getClassName() != "Main")
+					{
+						ft.define("this",ft.getClassName(),"arg");
+					}
                     throwNextToken(); // function
 					throwNextToken(); // type
 					string name =  getTagValue();
