@@ -1,4 +1,4 @@
-# nand2tetris - Projects 7-11
+# nand2tetris - Projects 7-11 (Implemented in D language)
 
 The "Nand to Tetris" course provides a deep dive into the intricacies of computer systems, spanning from foundational hardware constructs to sophisticated software hierarchies. This repository focuses on the software aspect, specifically projects 7-11, which center around the construction of a compiler for the Jack programming language.
 
